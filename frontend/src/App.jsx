@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import Editor from '@monaco-editor/react'
+
 import './App.css'
 
 function App() {
@@ -14,9 +16,15 @@ function App() {
 
 
         <section className="w-3/4 bg-neutral-800 rounded-lg p-4">
-          <h2 className="text-white text-xl font-bold">
-            Editor Area
-          </h2>
+          <Editor
+            height="100%"
+            defaultLanguage="javascript"
+            theme="vs-dark"
+            defaultValue={`console.log("Hello Aarav");`}
+            onChange={(value) => {
+              console.log(value);
+            }}
+          />
         </section>
       </main>
     </>
