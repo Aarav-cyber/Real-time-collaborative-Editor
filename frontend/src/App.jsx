@@ -27,7 +27,11 @@ function App() {
       ydoc,
       { autoConnect: true }
     );
-    providerRef.current = provider;
+    if (providerRef.current) {
+  providerRef.current.awareness.setLocalStateField("user", null);
+  providerRef.current.disconnect?.();
+  providerRef.current.destroy?.();
+}
 
     // set local user from username state (fallback to Anonymous)
     provider.awareness.setLocalStateField("user", {
