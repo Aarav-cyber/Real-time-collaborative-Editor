@@ -21,17 +21,29 @@ function App() {
   const handleMount = (editor) => {
     editorRef.current = editor;
 
-    const provider = new SocketIOProvider(
-      "http://localhost:3000",
+    // Use Vite env var so backend URL can be injected at build time
+    const BACKEND_URL =
+      import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+    console.log("BACKEND_URL:", BACKEND_URL);
+
+    
+      const provider = new SocketIOProvider(
+      BACKEND_URL,
       "monaco-room",
       ydoc,
-      { autoConnect: true }
+      {
+        autoConnect: true,
+      }
     );
+
+    providerRef.current = provider;
+
+    //is this okay
     if (providerRef.current) {
-  providerRef.current.awareness.setLocalStateField("user", null);
-  providerRef.current.disconnect?.();
-  providerRef.current.destroy?.();
-}
+      providerRef.current.awareness.setLocalStateField("user", null);
+      providerRef.current.disconnect?.();
+      providerRef.current.destroy?.();
+    }
 
     // set local user from username state (fallback to Anonymous)
     provider.awareness.setLocalStateField("user", {
@@ -53,7 +65,7 @@ function App() {
       yText,
       editor.getModel(),
       new Set([editor]),
-      provider.awareness
+      provider.awareness,
     );
     bindingRef.current = binding;
 
@@ -77,7 +89,7 @@ function App() {
         ) {
           providerRef.current.awareness.off(
             "change",
-            providerRef.current._onAwarenessChange
+            providerRef.current._onAwarenessChange,
           );
         }
 
